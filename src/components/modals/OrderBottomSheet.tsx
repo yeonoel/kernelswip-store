@@ -44,20 +44,6 @@ export default function OrderBottomSheet() {
         // En prod → goTo('otp') et attendre validation avant commune
     }
 
-    function handleOtpChange(val: string, index: number) {
-        if (!/^\d*$/.test(val)) return
-        const next = [...otp]; next[index] = val; setOtp(next)
-        setOtpError(false)
-        if (val && index < 3) inputRefs[index + 1].current?.focus()
-        if (index === 3 && val) {
-            const entered = [...next.slice(0, 3), val].join('')
-            if (verifyCode(entered)) { goTo('commune') }
-            else {
-                setOtpError(true)
-                setTimeout(() => { setOtp(['', '', '', '']); setOtpError(false); inputRefs[0].current?.focus() }, 600)
-            }
-        }
-    }
 
     function handleOtpKeyDown(e: React.KeyboardEvent, index: number) {
         if (e.key === 'Backspace' && !otp[index] && index > 0) inputRefs[index - 1].current?.focus()

@@ -1,5 +1,3 @@
-// src/hooks/useOtp.ts
-
 import { useState, useRef, useCallback } from 'react'
 
 export function useOtp() {
@@ -13,8 +11,8 @@ export function useOtp() {
 
         // 🚧 Simulation — en prod on appelle AfricasTalking ici
         // await africasTalking.sms.send({ to: phone, message: `Votre code Swip : ${code}` })
-        console.log(`📱 SMS simulé → ${phone} : Votre code Swip est ${code}`)
-        alert(`📱 SMS simulé\nCode envoyé au ${phone} :\n\n${code}\n\n(En production → vrai SMS)`)
+        //console.log(`📱 SMS simulé → ${phone} : Votre code Swip est ${code}`)
+        //alert(`📱 SMS simulé\nCode envoyé au ${phone} :\n\n${code}\n\n(En production → vrai SMS)`)
 
         // Timer 60s
         setTimer(60)

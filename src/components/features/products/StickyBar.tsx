@@ -8,11 +8,7 @@ interface StickyBarProps {
     onAddToCart: () => void
 }
 
-export default function StickyBar({
-    quantity, totalPrice, isReady,
-    onIncrease, onDecrease,
-    onOrder, onAddToCart,
-}: StickyBarProps) {
+export default function StickyBar({ quantity, totalPrice, isReady, onIncrease, onDecrease, onOrder, onAddToCart }: StickyBarProps) {
     return (
         <div className="sticky bottom-0 bg-white/97 backdrop-blur-xl border-t border-[#EBEBE6] px-4 pt-3 pb-8">
             <div className="flex items-center gap-3">
