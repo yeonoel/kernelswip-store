@@ -5,6 +5,7 @@ import { useCreateOrder } from '../../hooks/useCreateOrder'
 import { ABIDJAN, COMMUNES } from '../../data'
 import { isValidIvorianPhone, normalizeIvorianPhone } from '../../lib/phone'
 import { useOtp } from '../../hooks/useOtp'
+import WhatsAppValidation from '../features/whatssapp/WhatsAppValidation'
 
 export default function OrderBottomSheet() {
     const { storeSlug } = useParams<{ storeSlug: string }>()
@@ -15,10 +16,9 @@ export default function OrderBottomSheet() {
     } = useOrderStore()
 
     const { sendCode, verifyCode, resend, timer } = useOtp()
-    const { submitOrder, isLoading } = useCreateOrder(storeSlug!)
+    const { submitOrder, isLoading, data } = useCreateOrder(storeSlug!)
 
     const [otp, setOtp] = useState(['', '', '', ''])
-    const [otpError, setOtpError] = useState(false)
     const inputRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)]
 
     const isOpen = ['phone', 'commune', 'quartier', 'confirm', 'success'].includes(step)
@@ -49,7 +49,7 @@ export default function OrderBottomSheet() {
         if (e.key === 'Backspace' && !otp[index] && index > 0) inputRefs[index - 1].current?.focus()
     }
 
-    if (!item) return null
+    if (!item) return null;
 
     const totalPrice = (Number(item.product.price) * item.quantity).toLocaleString()
     const normalizedPhone = normalizeIvorianPhone(phone)
@@ -256,29 +256,66 @@ export default function OrderBottomSheet() {
                     )}
 
                     {/* ══ SUCCESS ══ */}
+
                     {step === 'success' && (
-                        <div className="flex flex-col items-center text-center py-6">
-                            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-4xl mb-5 shadow-[0_0_0_14px_rgba(22,163,74,0.1)]">
-                                ✓
+                        <div className="flex flex-col items-center text-center py-6 px-4">
+                            {/* L'icône qui clignote un peu pour attirer l'œil */}
+                            <div className="w-20 h-20 rounded-full bg-[#E8F5E9] border-2 border-[#25D366] flex items-center justify-center text-3xl mb-6 shadow-sm animate-pulse">
+                                ✅
                             </div>
-                            <h2 className="font-['Fraunces'] text-[26px] font-black mb-2">Commande envoyée !</h2>
-                            <p className="text-[14px] text-[#9B9590] leading-relaxed mb-2">
-                                Le vendeur confirme et te contacte sur WhatsApp 📲
+
+                            <h2 className="font-['Fraunces'] text-[24px] font-black mb-2 text-[#111010]">
+                                C'est presque dans tes mains ! 🎁
+                            </h2>
+
+                            <p className="text-[14px] text-[#9B9590] leading-relaxed mb-8 px-2">
+                                Ta commande est bien réservée. On attend juste ton <strong className="text-[#111010]">"OK"</strong> sur WhatsApp pour lancer le livreur vers <strong className="text-[#111010]">{quartier}</strong>.
                             </p>
-                            <p className="text-[13px] text-[#9B9590] mb-8">
-                                Livraison à <strong className="text-[#111010]">{quartier}, {commune}</strong>
-                            </p>
-                            <button
-                                onClick={closeOrder}
-                                className="bg-[#111010] text-white px-8 py-4 rounded-2xl font-['Fraunces'] text-[15px] font-bold active:scale-[0.97] transition-transform"
-                            >
-                                Continuer à explorer
-                            </button>
+
+                            {/* 💡 LE MESSAGE "SÉRIEUX MAIS CHIC" (Le filtre Marketing) */}
+                            <div className="w-full bg-[#FDF2F2] rounded-2xl p-5 mb-8 border-l-4 border-[#E8303A]">
+                                <p className="text-[13px] text-[#111010] font-bold text-left mb-1">
+                                    On se dit la vérité ? 😊
+                                </p>
+                                <p className="text-[12px] text-[#4A4A4A] text-left leading-tight">
+                                    Si tu n'es pas encore prêt(e) ou si tu as un petit changement de programme, <span className="text-[#E8303A] font-bold text-[13px]">y'a pas de souci, on se fâche pas !</span> Clique juste sur "Annuler" en bas. On préfère livrer ceux qui sont 100% prêts pour éviter que le livreur se déplace pour rien.
+                                </p>
+                            </div>
+
+                            <div className="w-full space-y-4">
+                                {/* BOUTON PRINCIPAL : VALIDATION */}
+                                <a
+                                    href={`https://wa.me/${+15551804841}?text=${encodeURIComponent(
+                                        `Bonjour, je confirme ma commande #${data?.orderNumber} sur [${storeSlug}] pour livraison à ${quartier}, ${commune}. C'est gâté !`
+                                    )}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="w-full bg-[#25D366] text-white py-5 rounded-2xl font-['Fraunces'] text-[17px] font-black shadow-[0_8px_20px_rgba(37,211,102,0.3)] active:scale-[0.97] transition-all flex items-center justify-center gap-3"
+                                >
+                                    Confirmer sur WhatsApp 📲
+                                </a>
+
+                                {/* BOUTON SECONDAIRE : ANNULATION (Le filtre doux) */}
+                                <button
+                                    onClick={closeOrder}
+                                    className="w-full py-3 text-[13px] text-[#9B9590] font-bold hover:text-[#E8303A] transition-colors"
+                                >
+                                    Non, je vais réfléchir un peu ↩️
+                                </button>
+                            </div>
+
+                            <div className="mt-10 flex items-center gap-2 opacity-50">
+                                <span className="h-px w-8 bg-[#9B9590]"></span>
+                                <p className="text-[10px] uppercase tracking-widest font-black text-[#9B9590]">
+                                    Paiement à la livraison · Shopall
+                                </p>
+                                <span className="h-px w-8 bg-[#9B9590]"></span>
+                            </div>
                         </div>
                     )}
 
                 </div>
-            </div>
+            </div >
         </>
     )
 }

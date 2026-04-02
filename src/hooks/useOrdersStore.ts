@@ -13,6 +13,7 @@ interface OrderItem {
 }
 
 interface OrderStore {
+
     step: OrderStep
     item: OrderItem | null
     phone: string
