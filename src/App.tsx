@@ -16,8 +16,7 @@ const queryClient = new QueryClient({
 
 export default function App() {
   return (
-    <HelmetProvider>ù
-
+    <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <CartProvider>

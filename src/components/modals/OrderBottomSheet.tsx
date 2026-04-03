@@ -5,7 +5,6 @@ import { useCreateOrder } from '../../hooks/useCreateOrder'
 import { ABIDJAN, COMMUNES } from '../../data'
 import { isValidIvorianPhone, normalizeIvorianPhone } from '../../lib/phone'
 import { useOtp } from '../../hooks/useOtp'
-import WhatsAppValidation from '../features/whatssapp/WhatsAppValidation'
 
 export default function OrderBottomSheet() {
     const { storeSlug } = useParams<{ storeSlug: string }>()
@@ -13,7 +12,7 @@ export default function OrderBottomSheet() {
         step, item, phone, commune, quartier,
         setPhone, setCommune, setQuartier,
         closeOrder, goTo,
-    } = useOrderStore()
+    } = useOrderStore();
 
     const { sendCode, verifyCode, resend, timer } = useOtp()
     const { submitOrder, isLoading, data } = useCreateOrder(storeSlug!)
@@ -269,24 +268,14 @@ export default function OrderBottomSheet() {
                             </h2>
 
                             <p className="text-[14px] text-[#9B9590] leading-relaxed mb-8 px-2">
-                                Ta commande est bien réservée. On attend juste ton <strong className="text-[#111010]">"OK"</strong> sur WhatsApp pour lancer le livreur vers <strong className="text-[#111010]">{quartier}</strong>.
+                                Ta commande est bien réservée. On attend juste ton <strong className="text-[#111010]">"OK"</strong> Sur WhatsApp pour convenir de la date de livraison à <strong className="text-[#111010]">{quartier}</strong>.
                             </p>
-
-                            {/* 💡 LE MESSAGE "SÉRIEUX MAIS CHIC" (Le filtre Marketing) */}
-                            <div className="w-full bg-[#FDF2F2] rounded-2xl p-5 mb-8 border-l-4 border-[#E8303A]">
-                                <p className="text-[13px] text-[#111010] font-bold text-left mb-1">
-                                    On se dit la vérité ? 😊
-                                </p>
-                                <p className="text-[12px] text-[#4A4A4A] text-left leading-tight">
-                                    Si tu n'es pas encore prêt(e) ou si tu as un petit changement de programme, <span className="text-[#E8303A] font-bold text-[13px]">y'a pas de souci, on se fâche pas !</span> Clique juste sur "Annuler" en bas. On préfère livrer ceux qui sont 100% prêts pour éviter que le livreur se déplace pour rien.
-                                </p>
-                            </div>
 
                             <div className="w-full space-y-4">
                                 {/* BOUTON PRINCIPAL : VALIDATION */}
                                 <a
                                     href={`https://wa.me/${+15551804841}?text=${encodeURIComponent(
-                                        `Bonjour, je confirme ma commande #${data?.orderNumber} sur [${storeSlug}] pour livraison à ${quartier}, ${commune}. C'est gâté !`
+                                        `Bonjour, je confirme ma commande #${data?.orderNumber} sur [${storeSlug}] pour livraison à ${quartier}, ${commune}. \n Je confirme mon choix à 100%. Je veux vraiment cet article, vous pouvez préparer mon colis ! 🎁`
                                     )}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
