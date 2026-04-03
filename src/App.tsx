@@ -6,6 +6,7 @@ import { NotFoundPage } from './pages/not-found/NotFoundPage'
 import RootRedirect from './pages/RoutRedirect/RouteRedirect'
 import MainLayout from './components/layout/MainLayout/mainLayout'
 import ProductDetails from './pages/productDetails/productDetails'
+import { HelmetProvider } from 'react-helmet-async'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,26 +16,29 @@ const queryClient = new QueryClient({
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <CartProvider>
-          <Routes>
+    <HelmetProvider>ù
 
-            {/* Racine — redirige vers dernière boutique visitée */}
-            <Route path="/" element={<RootRedirect />} />
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <CartProvider>
+            <Routes>
 
-            {/* Boutique */}
-            <Route path="/:storeSlug" element={<MainLayout />}>
-              <Route index element={<ProductsGridPage />} />
-              <Route path="produit/:productSlug" element={<ProductDetails />} />
-            </Route>
+              {/* Racine — redirige vers dernière boutique visitée */}
+              <Route path="/" element={<RootRedirect />} />
 
-            {/* 404 */}
-            <Route path="*" element={<NotFoundPage />} />
+              {/* Boutique */}
+              <Route path="/:storeSlug" element={<MainLayout />}>
+                <Route index element={<ProductsGridPage />} />
+                <Route path="produit/:productSlug" element={<ProductDetails />} />
+              </Route>
 
-          </Routes>
-        </CartProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
+              {/* 404 */}
+              <Route path="*" element={<NotFoundPage />} />
+
+            </Routes>
+          </CartProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </HelmetProvider>
   )
 }

@@ -6,11 +6,14 @@ import ProductGrid from '../../components/features/products/ProductGrid'
 import Header from '../../components/layout/Header/Header'
 import WhatsAppButton from '../../components/ui/WhatsAppButton'
 import SocialProofToast from '../../components/ui/SocialProofToast'
+import { Helmet } from 'react-helmet-async'
 
 export default function ProductsGridPage() {
     const { storeSlug } = useParams<{ storeSlug: string }>()
     const navigate = useNavigate()
     const { data, isLoading, isError } = useProducts(storeSlug!)
+
+    const product = data?.products[0] // Juste pour les meta tags, à améliorer pour prendre un produit spécifique
 
     function handleProductClick(product: Product) {
         navigate(`/${storeSlug}/produit/${product.slug}`)
@@ -27,25 +30,35 @@ export default function ProductsGridPage() {
         </div>
     )
     return (
-        <div className="min-h-screen bg-[#FAF8F5]">
-            <Header
-                vendorInitial={storeSlug?.[0].toUpperCase() ?? 'S'}
-                vendorHandle={`@${storeSlug}`}
-                vendorSub="Boutique officielle 🇨🇮"
-                isLive={false}
-                cartCount={0}
-                onCartClick={() => console.log('ouvrir panier')}
-            />
-            <ProductGrid
-                products={data?.products ?? []}
-                onProductClick={handleProductClick}
-            />
 
-            {/*Bouton WhatsApp — numéro du vendeur */}
-            <WhatsAppButton phone="+2250747492156" />
+        <>
+            <Helmet>
+                <title>{product?.name} | KernelsShop</title>
+                <meta property="og:title" content={product?.name} />
+                <meta property="og:description" content={product?.description || ''} />
+                <meta property="og:image" content={product?.images[0].imageUrl} />
+                <meta property="og:url" content={`https://kernelsshop.com/products/${product?.id}`} />
+            </Helmet>
+            <div className="min-h-screen bg-[#FAF8F5]">
+                <Header
+                    vendorInitial={storeSlug?.[0].toUpperCase() ?? 'S'}
+                    vendorHandle={`@${storeSlug}`}
+                    vendorSub="Boutique officielle 🇨🇮"
+                    isLive={false}
+                    cartCount={0}
+                    onCartClick={() => console.log('ouvrir panier')}
+                />
+                <ProductGrid
+                    products={data?.products ?? []}
+                    onProductClick={handleProductClick}
+                />
 
-            {/*Social proof — activité en temps réel */}
-            <SocialProofToast />
-        </div>
+                {/*Bouton WhatsApp — numéro du vendeur */}
+                <WhatsAppButton phone="+2250747492156" />
+
+                {/*Social proof — activité en temps réel */}
+                <SocialProofToast />
+            </div>
+        </>
     )
 }
