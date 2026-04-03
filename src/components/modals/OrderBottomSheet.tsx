@@ -176,7 +176,6 @@ export default function OrderBottomSheet() {
                             </button>
                             <h2 className="font-['Fraunces'] text-[22px] font-black mb-1">Ton quartier 🏘️</h2>
                             <p className="text-[13px] text-[#9B9590] mb-5">Quartier de livraison à {commune}</p>
-
                             <div className="flex flex-wrap gap-2">
                                 {ABIDJAN[commune].map(q => (
                                     <button
@@ -258,7 +257,6 @@ export default function OrderBottomSheet() {
                     )}
 
                     {/* ══ SUCCESS ══ */}
-
                     {step === 'success' && (
                         <div className="flex flex-col items-center text-center py-6 px-4">
                             {/* L'icône qui clignote un peu pour attirer l'œil */}
@@ -295,7 +293,6 @@ export default function OrderBottomSheet() {
                                     Confirmer sur WhatsApp 📲
                                 </a>
 
-
                                 {/* BOUTON SECONDAIRE : ANNULATION (Le filtre doux) */}
                                 <button
                                     onClick={closeOrder}
@@ -316,7 +313,7 @@ export default function OrderBottomSheet() {
                     )}
 
                 </div>
-            </div >
+            </div>
         </>
     )
 }
