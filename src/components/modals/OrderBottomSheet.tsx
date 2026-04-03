@@ -275,7 +275,7 @@ export default function OrderBottomSheet() {
                                 {/* BOUTON PRINCIPAL : VALIDATION */}
                                 <a
                                     href={`https://wa.me/${+15551804841}?text=${encodeURIComponent(
-                                        `Bonjour, je confirme ma commande #${data?.orderNumber} sur [${storeSlug}] pour livraison à ${quartier}, ${commune}. \n Je confirme mon choix à 100%. Je veux vraiment cet article, vous pouvez préparer mon colis ! 🎁`
+                                        `Bonjour, je confirme ma commande #${data?.orderNumber} sur [${storeSlug}] pour livraison à ${quartier}, ${commune}. \n ${data?.items.map((item) => `- ${item.quantity} x ${item.productName} x ${item.variantName} `).join('\n')}.\n Je confirme mon choix à 100%. Je veux vraiment cet article, vous pouvez préparer mon colis ! 🎁`
                                     )}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
