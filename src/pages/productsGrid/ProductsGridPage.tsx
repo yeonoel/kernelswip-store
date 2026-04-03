@@ -7,11 +7,13 @@ import Header from '../../components/layout/Header/Header'
 import WhatsAppButton from '../../components/ui/WhatsAppButton'
 import SocialProofToast from '../../components/ui/SocialProofToast'
 import { Helmet } from 'react-helmet-async'
+import { useStoreMangment } from '../../hooks/useStoreMangment'
 
 export default function ProductsGridPage() {
     const { storeSlug } = useParams<{ storeSlug: string }>()
     const navigate = useNavigate()
-    const { data, isLoading, isError } = useProducts(storeSlug!)
+    const { data, isLoading, isError } = useProducts(storeSlug!);
+    const { data: store } = useStoreMangment();
 
     const product = data?.products[0] // Juste pour les meta tags, à améliorer pour prendre un produit spécifique
 
@@ -54,7 +56,7 @@ export default function ProductsGridPage() {
                 />
 
                 {/*Bouton WhatsApp — numéro du vendeur */}
-                <WhatsAppButton phone="+2250747492156" />
+                <WhatsAppButton phone={store?.owner?.phone ?? ''} />
 
                 {/*Social proof — activité en temps réel */}
                 <SocialProofToast />

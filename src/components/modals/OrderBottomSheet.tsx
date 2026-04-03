@@ -5,16 +5,19 @@ import { useCreateOrder } from '../../hooks/useCreateOrder'
 import { ABIDJAN, COMMUNES } from '../../data'
 import { isValidIvorianPhone, normalizeIvorianPhone } from '../../lib/phone'
 import { useOtp } from '../../hooks/useOtp'
+import { useStoreMangment } from '../../hooks/useStoreMangment'
 
 export default function OrderBottomSheet() {
-    const { storeSlug } = useParams<{ storeSlug: string }>()
+    const { storeSlug } = useParams<{ storeSlug: string }>();
     const {
         step, item, phone, commune, quartier,
         setPhone, setCommune, setQuartier,
         closeOrder, goTo,
     } = useOrderStore();
 
-    const { sendCode, verifyCode, resend, timer } = useOtp()
+    const { data: store } = useStoreMangment();
+
+    const { sendCode } = useOtp()
     const { submitOrder, isLoading, data } = useCreateOrder(storeSlug!)
 
     const [otp, setOtp] = useState(['', '', '', ''])
@@ -274,8 +277,16 @@ export default function OrderBottomSheet() {
                             <div className="w-full space-y-4">
                                 {/* BOUTON PRINCIPAL : VALIDATION */}
                                 <a
-                                    href={`https://wa.me/${+15551804841}?text=${encodeURIComponent(
-                                        `Bonjour, je confirme ma commande #${data?.orderNumber} sur [${storeSlug}] pour livraison à ${quartier}, ${commune}. \n ${data?.items.map((item) => `- ${item.quantity} x ${item.productName} x ${item.variantName} `).join('\n')}.\n Je confirme mon choix à 100%. Je veux vraiment cet article, vous pouvez préparer mon colis ! 🎁`
+                                    href={`https://wa.me/${store?.owner?.phone}?text=${encodeURIComponent(
+                                        `Bonjour, je confirme ma commande #${data?.orderNumber} sur [${storeSlug}] pour livraison à ${quartier}, ${commune}.\n\n${data?.items
+                                            .map((item) => {
+                                                let line = `*Nom produit:* ${item.productName}\n*Quantité:* ${item.quantity}`;
+                                                if (item.variantName) {
+                                                    line += `\n*Variante:* ${item.variantName}`;
+                                                }
+                                                return line;
+                                            })
+                                            .join('\n\n')}\n\nJe confirme mon choix à 100%. Je veux vraiment cet article, vous pouvez préparer mon colis ! `
                                     )}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -283,6 +294,7 @@ export default function OrderBottomSheet() {
                                 >
                                     Confirmer sur WhatsApp 📲
                                 </a>
+
 
                                 {/* BOUTON SECONDAIRE : ANNULATION (Le filtre doux) */}
                                 <button
@@ -296,7 +308,7 @@ export default function OrderBottomSheet() {
                             <div className="mt-10 flex items-center gap-2 opacity-50">
                                 <span className="h-px w-8 bg-[#9B9590]"></span>
                                 <p className="text-[10px] uppercase tracking-widest font-black text-[#9B9590]">
-                                    Paiement à la livraison · Shopall
+                                    ${`Paiement à la livraison · ${store?.name}`}
                                 </p>
                                 <span className="h-px w-8 bg-[#9B9590]"></span>
                             </div>
