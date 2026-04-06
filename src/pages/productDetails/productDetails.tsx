@@ -75,7 +75,7 @@ export default function ProductDetails() {
             {/* Mini nav — flèche + nom produit + panier */}
             <div className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-[#EBEBE6] px-4 py-3 flex items-center gap-3">
                 <button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate("/" + storeSlug)}
                     className="w-9 h-9 rounded-full bg-[#FAF8F5] border border-[#EBEBE6] flex items-center justify-center text-lg active:scale-90 transition-transform"
                 >
                     ←
